@@ -17,16 +17,23 @@ public class HomeController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Dao dao = new Dao();
-        ArrayList<Product> allProducts = dao.getAllProduct();
-        ArrayList<Product> vegetableProducts = dao.getVegetableProducts();
-        ArrayList<Product> fruitProducts = dao.getFruitProducts();
-        ArrayList<Product> breadProducts = dao.getBreadProducts();
-        ArrayList<Product> meatProducts = dao.getMeatProducts();
+
+        // Lấy tất cả sản phẩm
+        ArrayList<Product> allProducts = dao.getAllProducts();
+        // Lấy từng loại sản phẩm theo category_id
+        ArrayList<Product> vegetableProducts = dao.getProductsByCategory(1);
+        ArrayList<Product> fruitProducts = dao.getProductsByCategory(2);
+        ArrayList<Product> breadProducts = dao.getProductsByCategory(3);
+        ArrayList<Product> meatProducts = dao.getProductsByCategory(4);
+
+        // Gán dữ liệu vào request
         req.setAttribute("allProducts", allProducts);
         req.setAttribute("vegetableProducts", vegetableProducts);
         req.setAttribute("fruitProducts", fruitProducts);
         req.setAttribute("breadProducts", breadProducts);
         req.setAttribute("meatProducts", meatProducts);
+
+        // Chuyển sang JSP
         req.getRequestDispatcher("index.jsp").forward(req, resp);
     }
 

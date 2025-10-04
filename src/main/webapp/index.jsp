@@ -404,7 +404,7 @@ isELIgnored="false" %>
                             class="text-white bg-secondary px-3 py-1 rounded position-absolute"
                             style="top: 10px; left: 10px"
                           >
-                            ${product.categoryId}
+                            ${product.category.categoryName}
                           </div>
                           <div
                             class="p-4 border border-secondary border-top-0 rounded-bottom"
@@ -453,7 +453,7 @@ isELIgnored="false" %>
                             class="text-white bg-secondary px-3 py-1 rounded position-absolute"
                             style="top: 10px; left: 10px"
                           >
-                            ${product.categoryId}
+                            ${product.category.categoryName}
                           </div>
                           <div
                             class="p-4 border border-secondary border-top-0 rounded-bottom"
@@ -502,7 +502,7 @@ isELIgnored="false" %>
                             class="text-white bg-secondary px-3 py-1 rounded position-absolute"
                             style="top: 10px; left: 10px"
                           >
-                            ${product.categoryId}
+                            ${product.category.categoryName}
                           </div>
                           <div
                             class="p-4 border border-secondary border-top-0 rounded-bottom"
@@ -551,7 +551,7 @@ isELIgnored="false" %>
                             class="text-white bg-secondary px-3 py-1 rounded position-absolute"
                             style="top: 10px; left: 10px"
                           >
-                            ${product.categoryId}
+                            ${product.category.categoryName}
                           </div>
                           <div
                             class="p-4 border border-secondary border-top-0 rounded-bottom"
@@ -600,7 +600,7 @@ isELIgnored="false" %>
                             class="text-white bg-secondary px-3 py-1 rounded position-absolute"
                             style="top: 10px; left: 10px"
                           >
-                            ${product.categoryId}
+                            ${product.category.categoryName}
                           </div>
                           <div
                             class="p-4 border border-secondary border-top-0 rounded-bottom"

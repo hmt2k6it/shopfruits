@@ -1,4 +1,5 @@
 controllers\HomeController.class
 database\JDBCUtil.class
+models\Category.class
 models\Product.class
 dao\Dao.class

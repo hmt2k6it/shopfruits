@@ -6,16 +6,16 @@ public class Product {
     private long productPrice;
     private String productImage;
     private String productDescription;
-    private int categoryId;
+    private Category category;
 
     public Product(int productId, String productName, long productPrice, String productImage, String productDescription,
-            int categoryId) {
+            Category category) {
         this.productId = productId;
         this.productName = productName;
         this.productPrice = productPrice;
         this.productImage = productImage;
         this.productDescription = productDescription;
-        this.categoryId = categoryId;
+        this.category = category;
     }
 
     public int getProductId() {
@@ -58,19 +58,19 @@ public class Product {
         this.productDescription = productDescription;
     }
 
-    public int getCategoryId() {
-        return categoryId;
+    public Category getCategory() {
+        return category;
     }
 
-    public void setCategoryId(int categoryId) {
-        this.categoryId = categoryId;
+    public void setCategory(Category category) {
+        this.category = category;
     }
 
     @Override
     public String toString() {
         return "Product [productId=" + productId + ", productName=" + productName + ", productPrice=" + productPrice
-                + ", productImage=" + productImage + ", productDescription=" + productDescription + ", categoryId="
-                + categoryId + "]";
+                + ", productImage=" + productImage + ", productDescription=" + productDescription + ", category="
+                + category + "]";
     }
 
 }
