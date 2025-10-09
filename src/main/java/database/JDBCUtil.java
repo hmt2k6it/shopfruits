@@ -1,43 +1,74 @@
 package database;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class JDBCUtil {
-    private static final String URL = "jdbc:mysql://localhost:3306/shopfruits";
-    private static final String USER = "root";
-    private static final String PASSWORD = "";
 
-    // Kết nối đến database
+    // Phương thức riêng để xử lý kết nối ở máy local
+    private static Connection getLocalConnection() throws ClassNotFoundException, SQLException {
+        // --- CẤU HÌNH KẾT NỐI LOCAL MYSQL CỦA BẠN ---
+        String url = "jdbc:mysql://localhost:3306/shopfruits?useSSL=false"; // <-- Sửa tên DB nếu cần
+        String user = "root";
+        String password = ""; // <-- Sửa password nếu có
+        // -----------------------------------------
+
+        System.out.println("Connecting to Local MySQL...");
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        Connection connection = DriverManager.getConnection(url, user, password);
+        System.out.println("Successfully connected to Local MySQL!");
+        return connection;
+    }
+
+    // Phương thức riêng để xử lý kết nối trên Render
+    private static Connection getRenderConnection(String dbUrl)
+            throws URISyntaxException, ClassNotFoundException, SQLException {
+        System.out.println("Connecting to Render PostgreSQL...");
+        URI dbUri = new URI(dbUrl);
+
+        String userInfo = dbUri.getUserInfo();
+        if (userInfo == null || !userInfo.contains(":")) {
+            throw new SQLException("Invalid database user info in DATABASE_URL environment variable.");
+        }
+
+        String username = userInfo.split(":")[0];
+        String password = userInfo.split(":")[1];
+        String jdbcUrl = "jdbc:postgresql://" + dbUri.getHost() + ':' + dbUri.getPort() + dbUri.getPath();
+
+        Class.forName("org.postgresql.Driver");
+        Connection connection = DriverManager.getConnection(jdbcUrl, username, password);
+        System.out.println("Successfully connected to Render PostgreSQL!");
+        return connection;
+    }
+
     public static Connection getConnection() {
-        Connection conn = null;
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            conn = DriverManager.getConnection(URL, USER, PASSWORD);
-        } catch (ClassNotFoundException | SQLException e) {
-            System.err.println("Database connection error: " + e.getMessage());
-        }
-        return conn;
-    }
+            // Đọc biến môi trường DATABASE_URL
+            String dbUrl = System.getenv("DATABASE_URL");
 
-    // Đóng kết nối database
-    public static void closeConnection(Connection conn) {
-        if (conn != null) {
-            try {
-                conn.close();
-            } catch (SQLException e) {
-                System.err.println("Database connection error: " + e.getMessage());
+            if (dbUrl == null || dbUrl.isEmpty()) {
+                // Nếu không có -> đang chạy ở local
+                return getLocalConnection();
+            } else {
+                // Nếu có -> đang chạy trên Render
+                return getRenderConnection(dbUrl);
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Failed to connect to the database", e);
         }
     }
 
-    public static void main(String[] args) {
-        Connection conn = JDBCUtil.getConnection();
-        if (conn != null) {
-            System.out.println("Đã kết nối thành công!");
-        } else {
-            System.out.println("Kết nối không thành công!");
+    public static void closeConnection(Connection c) {
+        try {
+            if (c != null && !c.isClosed()) {
+                c.close();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 }
