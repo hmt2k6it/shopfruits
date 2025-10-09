@@ -21,7 +21,8 @@ RUN mvn clean package -DskipTests
 
 # --- Giai đoạn 2: Chạy (Run) ứng dụng ---
 # Sử dụng một image Tomcat nhẹ để chạy file .war
-FROM tomcat:9.0-jre17-slim
+FROM tomcat:9.0-jdk17-slim
+
 
 # Xóa các ứng dụng mặc định của Tomcat
 RUN rm -rf /usr/local/tomcat/webapps/*
