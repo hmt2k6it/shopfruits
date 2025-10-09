@@ -315,8 +315,8 @@ isELIgnored="false" %>
               <div class="col-lg-9">
                 <div class="row g-4 justify-content-center">
                   <c:forEach var="product" items="${pageProducts}">
-                    <div class="col-md-6 col-lg-6 col-xl-4">
-                      <div class="rounded position-relative fruite-item">
+                    <div class="col-md-6 col-lg-6 col-xl-4 mb-4">
+                      <div class="rounded position-relative fruite-item h-100">
                         <div class="fruite-img">
                           <img
                             src="img/${product.productImage}"
@@ -331,10 +331,12 @@ isELIgnored="false" %>
                           ${product.category.categoryName}
                         </div>
                         <div
-                          class="p-4 border border-secondary border-top-0 rounded-bottom"
+                          class="p-4 border border-secondary border-top-0 rounded-bottom d-flex flex-column"
                         >
                           <h4 class="text-center">${product.productName}</h4>
-                          <p>${product.productDescription}</p>
+                          <p class="flex-grow-1">
+                            ${product.productDescription}
+                          </p>
                           <div
                             class="d-flex justify-content-between flex-lg-wrap"
                           >
@@ -350,11 +352,12 @@ isELIgnored="false" %>
                             <a
                               href="#"
                               class="btn border border-secondary rounded-pill px-3 text-primary"
-                              ><i
+                            >
+                              <i
                                 class="fa fa-shopping-bag me-2 text-primary"
                               ></i>
-                              Add to cart</a
-                            >
+                              Add to cart
+                            </a>
                           </div>
                         </div>
                       </div>
