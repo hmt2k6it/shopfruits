@@ -208,9 +208,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
                           >
                             <h4>${product.productName}</h4>
                             <p>${product.productDescription}</p>
-                            <div
-                              class="d-flex justify-content-between flex-lg-wrap"
-                            >
+                            <div class="justify-content-between flex-lg-wrap">
                               <p class="text-dark fs-5 fw-bold mb-0">
                                 <fmt:formatNumber
                                   value="${product.productPrice}"
