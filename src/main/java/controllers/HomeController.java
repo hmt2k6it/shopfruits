@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import dao.Dao;
 import models.Product;
 
-@WebServlet(urlPatterns = { "/" })
+@WebServlet(urlPatterns = { "/home" })
 public class HomeController extends HttpServlet {
 
     @Override
