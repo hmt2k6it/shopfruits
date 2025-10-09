@@ -345,6 +345,7 @@ isELIgnored="false" %>
                                 currencySymbol="vnđ"
                                 maxFractionDigits="2"
                               />
+                              / kg
                             </p>
                             <a
                               href="#"

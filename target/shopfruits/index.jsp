@@ -216,6 +216,7 @@ uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
                                   currencySymbol="vnđ"
                                   maxFractionDigits="2"
                                 />
+                                / kg
                               </p>
                               <a
                                 href="#"
