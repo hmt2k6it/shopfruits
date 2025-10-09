@@ -1,86 +1,86 @@
 package dao;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.SQLException;
 import java.util.ArrayList;
-import models.Product;
-import models.Category;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import database.JDBCUtil;
+import models.Category;
+import models.Product;
 
 public class Dao {
 
-    // Lấy tất cả sản phẩm
-    public ArrayList<Product> getAllProducts() {
-        return getProductsByCategory(0); // 0 có nghĩa là tất cả
+    public List<Product> getAllProducts() {
+        return getProductsByCategory(0);
     }
 
-    // Lấy sản phẩm theo cate_id
-    public ArrayList<Product> getProductsByCategory(int cateId) {
-        ArrayList<Product> products = new ArrayList<>();
-        try (Connection conn = JDBCUtil.getConnection();
-                Statement st = conn.createStatement()) {
+    public List<Product> getProductsByCategory(int cateId) {
+        List<Product> products = new ArrayList<>();
+        String sql = "SELECT * " +
+                "FROM products " +
+                "JOIN categories ON products.cate_id = categories.category_id ";
+        if (cateId > 0) {
+            sql += "WHERE cate_id = ?";
+        }
 
-            String sql = "SELECT p.*, c.category_name " +
-                    "FROM products p " +
-                    "JOIN categories c ON p.cate_id = c.category_id";
-
-            if (cateId > 0) { // nếu cateId > 0 thì lọc theo category
-                sql += " WHERE p.cate_id = " + cateId;
+        try (Connection connection = JDBCUtil.getConnection();
+                PreparedStatement ps = connection.prepareStatement(sql)) {
+            if (cateId > 0) {
+                ps.setInt(1, cateId);
             }
-
-            try (ResultSet rs = st.executeQuery(sql)) {
+            try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    Category category = new Category(
-                            rs.getInt("cate_id"),
-                            rs.getString("category_name"));
-
-                    products.add(new Product(
-                            rs.getInt("product_id"),
+                    products.add(new Product(rs.getInt("product_id"),
                             rs.getString("product_name"),
-                            rs.getLong("product_price"),
-                            rs.getString("product_img"),
                             rs.getString("product_des"),
-                            category));
+                            rs.getString("product_img"),
+                            rs.getLong("product_price"),
+                            new Category(rs.getInt("category_id"),
+                                    rs.getString("category_name"))));
                 }
             }
-
-        } catch (Exception e) {
-            System.err.println("Error: " + e.getMessage());
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
         return products;
     }
 
-    // Lấy tất cả category
-    public ArrayList<Category> getAllCategories() {
-        ArrayList<Category> categories = new ArrayList<>();
-        try (Connection conn = JDBCUtil.getConnection();
-                Statement st = conn.createStatement();
-                ResultSet rs = st.executeQuery("SELECT * FROM categories")) {
-
+    public Map<String, Integer> getCategoryWithSize() {
+        Map<String, Integer> categoriesMap = new HashMap<>();
+        String sql = "SELECT category_name, "
+                + "COUNT(product_id) AS total_products "
+                + "FROM categories "
+                + "JOIN products ON category_id = cate_id "
+                + "GROUP BY category_name;";
+        try (Connection connection = JDBCUtil.getConnection();
+                PreparedStatement ps = connection.prepareStatement(sql);
+                ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
-                categories.add(new Category(
-                        rs.getInt("category_id"),
-                        rs.getString("category_name")));
+                categoriesMap.put(rs.getString("category_name"), rs.getInt("total_products"));
             }
-
-        } catch (Exception e) {
-            System.err.println("Error: " + e.getMessage());
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        return categories;
+        return categoriesMap;
     }
 
-    public static void main(String[] args) {
-        Dao dao = new Dao();
-
-        System.out.println("=== Tất cả sản phẩm ===");
-        for (Product p : dao.getAllProducts()) {
-            System.out.println(p.getCategory().getCategoryId() + " - " + p.getCategory().getCategoryName());
+    public List<Category> getAllCategory() {
+        List<Category> categories = new ArrayList<>();
+        String sql = "SELECT * FROM categories";
+        try (Connection connection = JDBCUtil.getConnection();
+                PreparedStatement ps = connection.prepareStatement(sql);
+                ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                categories.add(new Category(rs.getInt("category_id"), rs.getString("category_name")));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-
-        System.out.println("\n=== Sản phẩm rau (cate_id = 2) ===");
-        for (Product p : dao.getProductsByCategory(1)) {
-            System.out.println(p.getCategory().getCategoryId() + " - " + p.getCategory().getCategoryName());
-        }
+        return categories;
     }
 }

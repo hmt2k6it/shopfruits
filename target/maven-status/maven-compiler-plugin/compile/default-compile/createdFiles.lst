@@ -3,3 +3,4 @@ database\JDBCUtil.class
 models\Category.class
 models\Product.class
 dao\Dao.class
+controllers\ShopController.class

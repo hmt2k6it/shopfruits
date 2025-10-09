@@ -3,18 +3,18 @@ package models;
 public class Product {
     private int productId;
     private String productName;
-    private long productPrice;
-    private String productImage;
     private String productDescription;
+    private String productImage;
+    private long productPrice;
     private Category category;
 
-    public Product(int productId, String productName, long productPrice, String productImage, String productDescription,
+    public Product(int productId, String productName, String productDescription, String productImage, long productPrice,
             Category category) {
         this.productId = productId;
         this.productName = productName;
-        this.productPrice = productPrice;
-        this.productImage = productImage;
         this.productDescription = productDescription;
+        this.productImage = productImage;
+        this.productPrice = productPrice;
         this.category = category;
     }
 

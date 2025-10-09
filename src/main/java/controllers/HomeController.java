@@ -2,6 +2,7 @@ package controllers;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,26 +15,34 @@ import models.Product;
 
 @WebServlet(urlPatterns = { "/home" })
 public class HomeController extends HttpServlet {
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String page = "home";
+        req.setAttribute("page", page);
         Dao dao = new Dao();
-
-        // Lấy tất cả sản phẩm
-        ArrayList<Product> allProducts = dao.getAllProducts();
-        // Lấy từng loại sản phẩm theo category_id
-        ArrayList<Product> vegetableProducts = dao.getProductsByCategory(1);
-        ArrayList<Product> fruitProducts = dao.getProductsByCategory(2);
-        ArrayList<Product> breadProducts = dao.getProductsByCategory(3);
-        ArrayList<Product> meatProducts = dao.getProductsByCategory(4);
-
-        // Gán dữ liệu vào request
-        req.setAttribute("allProducts", allProducts);
-        req.setAttribute("vegetableProducts", vegetableProducts);
-        req.setAttribute("fruitProducts", fruitProducts);
-        req.setAttribute("breadProducts", breadProducts);
-        req.setAttribute("meatProducts", meatProducts);
-
-        // Chuyển sang JSP
+        String activeCategory = req.getParameter("activeCategory");
+        if (activeCategory == null)
+            activeCategory = "0";
+        String activePage = req.getParameter("activePage");
+        int currentPage = 1;
+        if (activePage != null) {
+            try {
+                currentPage = Integer.parseInt(activePage);
+            } catch (NumberFormatException e) {
+                currentPage = 1;
+            }
+        }
+        List<Product> currentCategoryProducts = dao.getProductsByCategory(Integer.parseInt(activeCategory));
+        int totalProducts = currentCategoryProducts.size();
+        int totalPages = (int) Math.ceil((double) totalProducts / 8);
+        int startIndex = (currentPage - 1) * 8;
+        int endIndex = Math.min(startIndex + 8, totalProducts);
+        List<Product> pageProducts = new ArrayList<>(currentCategoryProducts.subList(startIndex, endIndex));
+        req.setAttribute("activeCategory", activeCategory);
+        req.setAttribute("currentPage", currentPage);
+        req.setAttribute("totalPages", totalPages);
+        req.setAttribute("pageProducts", pageProducts);
         req.getRequestDispatcher("index.jsp").forward(req, resp);
     }
 
