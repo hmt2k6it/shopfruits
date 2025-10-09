@@ -1,5 +1,9 @@
 # --- Giai đoạn 1: Xây dựng (Build) dự án ---
-FROM maven:3.8-openjdk-17 AS build
+# Dòng mới
+FROM maven:3.9.5-eclipse-temurin-21
+
+# Hoặc một phiên bản chính thức khác của Maven với JDK 21
+# FROM maven:3-openjdk-21
 
 WORKDIR /app
 
