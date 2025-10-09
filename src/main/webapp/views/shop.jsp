@@ -2,6 +2,7 @@
 uri="http://java.sun.com/jsp/jstl/core" prefix="c" %> <%@ taglib
 uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %> <%@ page
 isELIgnored="false" %>
+<fmt:setLocale value="vi_VN" />
 <!DOCTYPE html>
 <html lang="en">
   <head>
