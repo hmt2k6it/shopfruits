@@ -1,5 +1,5 @@
 # --- Giai đoạn 1: Xây dựng (Build) dự án ---
-FROM maven:3.8-openjdk-21 AS build
+FROM maven:3.8-openjdk-17 AS build
 
 WORKDIR /app
 
@@ -12,7 +12,7 @@ RUN mvn clean package -DskipTests
 
 # --- Giai đoạn 2: Chạy (Run) ứng dụng ---
 # SỬA LỖI Ở DÒNG NÀY (PHIÊN BẢN CUỐI CÙNG)
-FROM tomcat:9.0-jdk21
+FROM tomcat:9.0-jdk17
 
 # Xóa các ứng dụng mặc định của Tomcat
 RUN rm -rf /usr/local/tomcat/webapps/*
