@@ -11,9 +11,9 @@ public class JDBCUtil {
     // Phương thức riêng để xử lý kết nối ở máy local
     private static Connection getLocalConnection() throws ClassNotFoundException, SQLException {
         // --- CẤU HÌNH KẾT NỐI LOCAL MYSQL CỦA BẠN ---
-        String url = "jdbc:mysql://localhost:3306/shopfruits?useSSL=false"; // <-- Sửa tên DB nếu cần
+        String url = "jdbc:mysql://localhost:3306/shopfruits?useSSL=false"; // Sửa tên DB nếu cần
         String user = "root";
-        String password = ""; // <-- Sửa password nếu có
+        String password = ""; // Sửa password nếu có
         // -----------------------------------------
 
         System.out.println("Connecting to Local MySQL...");
@@ -36,7 +36,14 @@ public class JDBCUtil {
 
         String username = userInfo.split(":")[0];
         String password = userInfo.split(":")[1];
-        String jdbcUrl = "jdbc:postgresql://" + dbUri.getHost() + ':' + dbUri.getPort() + dbUri.getPath();
+
+        // ---- SỬA LỖI Ở ĐÂY ----
+        int port = dbUri.getPort();
+        if (port == -1) {
+            port = 5432; // Sử dụng cổng mặc định 5432 của PostgreSQL nếu không được chỉ định
+        }
+        String jdbcUrl = "jdbc:postgresql://" + dbUri.getHost() + ':' + port + dbUri.getPath();
+        // ---- KẾT THÚC SỬA LỖI ----
 
         Class.forName("org.postgresql.Driver");
         Connection connection = DriverManager.getConnection(jdbcUrl, username, password);
@@ -46,14 +53,10 @@ public class JDBCUtil {
 
     public static Connection getConnection() {
         try {
-            // Đọc biến môi trường DATABASE_URL
             String dbUrl = System.getenv("DATABASE_URL");
-
             if (dbUrl == null || dbUrl.isEmpty()) {
-                // Nếu không có -> đang chạy ở local
                 return getLocalConnection();
             } else {
-                // Nếu có -> đang chạy trên Render
                 return getRenderConnection(dbUrl);
             }
         } catch (Exception e) {
