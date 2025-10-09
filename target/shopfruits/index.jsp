@@ -216,7 +216,15 @@ uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
                                   currencySymbol="vnđ"
                                   maxFractionDigits="2"
                                 />
-                                / kg
+                                /
+                                <c:choose>
+                                  <c:when
+                                    test="${product.category.categoryId == 3}"
+                                  >
+                                    cái
+                                  </c:when>
+                                  <c:otherwise> kg</c:otherwise>
+                                </c:choose>
                               </p>
                               <a
                                 href="#"
