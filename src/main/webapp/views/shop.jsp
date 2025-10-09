@@ -332,7 +332,7 @@ isELIgnored="false" %>
                         <div
                           class="p-4 border border-secondary border-top-0 rounded-bottom"
                         >
-                          <h4>${product.productName}</h4>
+                          <h4 class="text-center">${product.productName}</h4>
                           <p>${product.productDescription}</p>
                           <div
                             class="d-flex justify-content-between flex-lg-wrap"
