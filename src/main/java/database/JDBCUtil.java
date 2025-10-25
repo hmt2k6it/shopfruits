@@ -23,10 +23,14 @@ public class JDBCUtil {
         return connection;
     }
     
-    // Phương thức riêng để xử lý kết nối trên Render
-    private static Connection getRenderConnection(String dbUrl)
+    // --- THAY ĐỔI: Phương thức này giờ đây để kết nối MySQL trên Railway ---
+    private static Connection getRailwayConnection(String dbUrl)
             throws URISyntaxException, ClassNotFoundException, SQLException {
-        System.out.println("Connecting to Render PostgreSQL...");
+        
+        System.out.println("Connecting to Railway MySQL...");
+
+        // dbUrl có dạng: mysql://user:password@host:port/database
+        // Cần chuyển nó thành URI để phân tích
         URI dbUri = new URI(dbUrl);
 
         String userInfo = dbUri.getUserInfo();
@@ -36,28 +40,43 @@ public class JDBCUtil {
 
         String username = userInfo.split(":")[0];
         String password = userInfo.split(":")[1];
-
-        // ---- SỬA LỖI Ở ĐÂY ----
+        String host = dbUri.getHost();
         int port = dbUri.getPort();
-        if (port == -1) {
-            port = 5432; // Sử dụng cổng mặc định 5432 của PostgreSQL nếu không được chỉ định
-        }
-        String jdbcUrl = "jdbc:postgresql://" + dbUri.getHost() + ':' + port + dbUri.getPath();
-        // ---- KẾT THÚC SỬA LỖI ----
+        String dbName = dbUri.getPath().substring(1); // Bỏ dấu / ở đầu
 
-        Class.forName("org.postgresql.Driver");
+        if (host == null || port == -1 || dbName.isEmpty()) {
+             throw new SQLException("Invalid database URL format in DATABASE_URL environment variable.");
+        }
+
+        // Tạo chuỗi JDBC URL cho MySQL
+        // Dạng: jdbc:mysql://host:port/database
+        String jdbcUrl = "jdbc:mysql://" + host + ":" + port + "/" + dbName + "?useSSL=false";
+
+        // Tải driver MySQL
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        
         Connection connection = DriverManager.getConnection(jdbcUrl, username, password);
-        System.out.println("Successfully connected to Render PostgreSQL!");
+        System.out.println("Successfully connected to Railway MySQL!");
         return connection;
     }
 
+    /**
+     * Phương thức chính để lấy kết nối.
+     * Sẽ tự động kiểm tra biến môi trường "DATABASE_URL".
+     * Nếu có, kết nối tới Railway.
+     * Nếu không, kết nối tới localhost.
+     */
     public static Connection getConnection() {
         try {
             String dbUrl = System.getenv("DATABASE_URL");
+            
             if (dbUrl == null || dbUrl.isEmpty()) {
+                // Không có DATABASE_URL, dùng local
                 return getLocalConnection();
             } else {
-                return getRenderConnection(dbUrl);
+                // Có DATABASE_URL, dùng Railway
+                // --- THAY ĐỔI: Gọi getRailwayConnection thay vì getRenderConnection ---
+                return getRailwayConnection(dbUrl); 
             }
         } catch (Exception e) {
             e.printStackTrace();
