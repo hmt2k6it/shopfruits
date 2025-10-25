@@ -1,10 +1,10 @@
 package database;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+// Bỏ import java.net.URI và java.net.URISyntaxException
+// vì chúng ta không dùng chúng nữa
 
 public class JDBCUtil {
 
@@ -23,30 +23,58 @@ public class JDBCUtil {
         return connection;
     }
     
-    // --- THAY ĐỔI: Phương thức này giờ đây để kết nối MySQL trên Railway ---
+    // --- ĐÃ SỬA LỖI: Phương thức này giờ đây phân tích chuỗi DATABASE_URL bằng tay ---
     private static Connection getRailwayConnection(String dbUrl)
-            throws URISyntaxException, ClassNotFoundException, SQLException {
+            throws ClassNotFoundException, SQLException {
         
         System.out.println("Connecting to Railway MySQL...");
 
         // dbUrl có dạng: mysql://user:password@host:port/database
-        // Cần chuyển nó thành URI để phân tích
-        URI dbUri = new URI(dbUrl);
 
-        String userInfo = dbUri.getUserInfo();
-        if (userInfo == null || !userInfo.contains(":")) {
-            throw new SQLException("Invalid database user info in DATABASE_URL environment variable.");
+        // --- BẮT ĐẦU SỬA LỖI PARSING ---
+        
+        // 1. Bỏ tiền tố "mysql://"
+        if (!dbUrl.startsWith("mysql://")) {
+            throw new SQLException("Invalid DATABASE_URL: must start with mysql://");
         }
+        String connectionString = dbUrl.substring("mysql://".length()); // Bỏ 8 ký tự đầu
 
-        String username = userInfo.split(":")[0];
-        String password = userInfo.split(":")[1];
-        String host = dbUri.getHost();
-        int port = dbUri.getPort();
-        String dbName = dbUri.getPath().substring(1); // Bỏ dấu / ở đầu
-
-        if (host == null || port == -1 || dbName.isEmpty()) {
-             throw new SQLException("Invalid database URL format in DATABASE_URL environment variable.");
+        // 2. Tách user:password và host:port/db tại ký tự '@'
+        String[] userInfoAndHost = connectionString.split("@", 2);
+        if (userInfoAndHost.length != 2) {
+            throw new SQLException("Invalid DATABASE_URL: missing '@' separator.");
         }
+        
+        String userInfo = userInfoAndHost[0];
+        String hostInfo = userInfoAndHost[1];
+
+        // 3. Tách username và password tại ký tự ':'
+        String[] userPass = userInfo.split(":", 2);
+        if (userPass.length != 2) {
+            throw new SQLException("Invalid DATABASE_URL: missing ':' in user info.");
+        }
+        String username = userPass[0];
+        String password = userPass[1];
+
+        // 4. Tách host:port và database name tại ký tự '/'
+        String[] hostPortAndDb = hostInfo.split("/", 2);
+        if (hostPortAndDb.length != 2) {
+            throw new SQLException("Invalid DATABASE_URL: missing '/' separator for database name.");
+        }
+        
+        String hostPort = hostPortAndDb[0];
+        String dbName = hostPortAndDb[1];
+        
+        // 5. Tách host và port tại ký tự ':'
+        String[] hostAndPort = hostPort.split(":", 2);
+        if (hostAndPort.length != 2) {
+            throw new SQLException("Invalid DATABASE_URL: missing ':' separator for port.");
+        }
+        
+        String host = hostAndPort[0];
+        String port = hostAndPort[1]; // Giữ port ở dạng String
+        
+        // --- KẾT THÚC SỬA LỖI PARSING ---
 
         // Tạo chuỗi JDBC URL cho MySQL
         // Dạng: jdbc:mysql://host:port/database
@@ -75,7 +103,6 @@ public class JDBCUtil {
                 return getLocalConnection();
             } else {
                 // Có DATABASE_URL, dùng Railway
-                // --- THAY ĐỔI: Gọi getRailwayConnection thay vì getRenderConnection ---
                 return getRailwayConnection(dbUrl); 
             }
         } catch (Exception e) {
