@@ -13,7 +13,7 @@ public class JDBCUtil {
         // --- CẤU HÌNH KẾT NỐI LOCAL MYSQL CỦA BẠN ---
         String url = "jdbc:mysql://localhost:3306/shopfruits?useSSL=false"; // Sửa tên DB nếu cần
         String user = "root";
-        String password = ""; // Sửa password nếu có
+        String password = "root"; // Sửa password nếu có
         // -----------------------------------------
 
         System.out.println("Connecting to Local MySQL...");
@@ -22,7 +22,7 @@ public class JDBCUtil {
         System.out.println("Successfully connected to Local MySQL!");
         return connection;
     }
-
+    
     // Phương thức riêng để xử lý kết nối trên Render
     private static Connection getRenderConnection(String dbUrl)
             throws URISyntaxException, ClassNotFoundException, SQLException {

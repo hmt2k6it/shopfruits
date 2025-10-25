@@ -1,405 +1,284 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %> <%@ taglib
 uri="http://java.sun.com/jsp/jstl/core" prefix="c" %> <%@ taglib
-uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %> <%@ page
-isELIgnored="false" %>
+uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <fmt:setLocale value="vi_VN" />
+<%@ page isELIgnored="false" %>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
   <head>
-    <meta charset="utf-8" />
-    <title>Fruitables - Vegetable Website Template</title>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <meta content="" name="keywords" />
-    <meta content="" name="description" />
+    <!-- Required Meta Tags -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <!-- Google Web Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Raleway:wght@600;800&display=swap"
-      rel="stylesheet"
-    />
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
+    <!-- Animate Min CSS -->
+    <link rel="stylesheet" href="assets/css/animate.min.css" />
+    <!-- Flaticon CSS -->
+    <link rel="stylesheet" href="assets/fonts/flaticon.css" />
+    <!-- Boxicons CSS -->
+    <link rel="stylesheet" href="assets/css/boxicons.min.css" />
+    <!-- Owl Carousel Min CSS -->
+    <link rel="stylesheet" href="assets/css/owl.carousel.min.css" />
+    <link rel="stylesheet" href="assets/css/owl.theme.default.min.css" />
+    <!-- Nice Select Min CSS -->
+    <link rel="stylesheet" href="assets/css/nice-select.min.css" />
+    <!-- Meanmenu CSS -->
+    <link rel="stylesheet" href="assets/css/meanmenu.css" />
+    <!-- Style CSS -->
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <!-- Responsive CSS -->
+    <link rel="stylesheet" href="assets/css/responsive.css" />
+    <!-- Theme Dark CSS -->
+    <link rel="stylesheet" href="assets/css/theme-dark.css" />
 
-    <!-- Icon Font Stylesheet -->
-    <link
-      rel="stylesheet"
-      href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"
-    />
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css"
-      rel="stylesheet"
-    />
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="assets/images/favicon.png" />
 
-    <!-- Libraries Stylesheet -->
-    <link href="lib/lightbox/css/lightbox.min.css" rel="stylesheet" />
-    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet" />
-
-    <!-- Customized Bootstrap Stylesheet -->
-    <link href="css/bootstrap.min.css" rel="stylesheet" />
-
-    <!-- Template Stylesheet -->
-    <link href="css/style.css" rel="stylesheet" />
+    <title>Shop Fruits - Bán trái cây online</title>
   </head>
-
   <body>
-    <%@ include file="includes/header.jsp" %>
-    <!-- Fruits Shop Start-->
-    <div class="container-fluid fruite py-5" id="products-section">
-      <div class="container py-5">
-        <h1 class="mb-4">Fresh fruits shop</h1>
-        <div class="row g-4">
-          <div class="col-lg-12">
-            <div class="row g-4">
-              <div class="col-xl-3">
-                <div class="input-group w-100 mx-auto d-flex">
-                  <input
-                    type="search"
-                    class="form-control p-3"
-                    placeholder="keywords"
-                    aria-describedby="search-icon-1"
-                  />
-                  <span id="search-icon-1" class="input-group-text p-3"
-                    ><i class="fa fa-search"></i
-                  ></span>
+    <!-- Pre Loader -->
+    <div class="preloader">
+      <div class="d-table">
+        <div class="d-table-cell">
+          <img src="assets/images/preloder-img.png" alt="Images" />
+          <h2>ShopFruits</h2>
+        </div>
+      </div>
+    </div>
+    <!-- End Pre Loader -->
+    <%@ include file="../includes/header.jsp" %>
+    <!-- Product Area -->
+    <div class="product-area pt-100 pb-70">
+      <div class="container-fluid m-0">
+        <div class="container-max">
+          <div class="row">
+            <div class="col-lg-9">
+              <div class="product-topper">
+                <div class="row">
+                  <div class="col-lg-8 col-md-8">
+                    <div class="product-topper-title">
+                      <h3>
+                        Tất cả sản phẩm
+                        <span
+                          ><span
+                            >( Hiểm thị ${startIndex+1}-${endIndex} của
+                            ${totalProducts} kết quả)</span
+                          ></span
+                        >
+                      </h3>
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div class="col-6"></div>
-              <div class="col-xl-3">
-                <div
-                  class="bg-light ps-3 py-3 rounded d-flex justify-content-between mb-4"
-                >
-                  <label for="fruits">Default Sorting:</label>
-                  <select
-                    id="fruits"
-                    name="fruitlist"
-                    class="border-0 form-select-sm bg-light me-3"
-                    form="fruitform"
-                  >
-                    <option value="volvo">Nothing</option>
-                    <option value="saab">Popularity</option>
-                    <option value="opel">Organic</option>
-                    <option value="audi">Fantastic</option>
-                  </select>
-                </div>
+              <div class="row">
+                <c:forEach var="product" items="${productPage}">
+                  <div class="col-lg-4 col-sm-6">
+                    <div class="product-item">
+                      <div class="product-img">
+                        <a href="shopdetail?productId=${product.productId}">
+                          <img
+                            src="assets/images/${product.productImage}"
+                            alt="Product Images"
+                          />
+                        </a>
+                        <div class="product-item-tag">
+                          <h3>
+                            ${product.category.categoryName},
+                            ${product.season.seasonName}
+                          </h3>
+                        </div>
+                        <ul class="product-item-action">
+                          <li>
+                            <a href="shopdetail?productId=${product.productId}"><i class="bx bx-repost"></i></a>
+                          </li>
+                          <li>
+                            <a href="wishlist.html"
+                              ><i class="bx bx-heart"></i
+                            ></a>
+                          </li>
+                          <li>
+                            <a href="cart?productId=${product.productId}"><i class="bx bx-cart"></i></a>
+                          </li>
+                        </ul>
+                      </div>
+
+                      <div class="content">
+                        <h3>
+                          <a href="shop-details.html">${product.productName}</a>
+                        </h3>
+                        <div class="rating">
+                          <i class="bx bxs-star"></i>
+                          <i class="bx bxs-star"></i>
+                          <i class="bx bxs-star"></i>
+                          <i class="bx bxs-star"></i>
+                          <i class="bx bxs-star"></i>
+                        </div>
+                        <span>
+                          <fmt:formatNumber
+                            value="${product.productPrice}"
+                            type="currency"
+                            currencySymbol="₫"
+                            groupingUsed="true"
+                            maxFractionDigits="0"
+                          />
+                          /Kg
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </c:forEach>
+                <c:if test="${pagination > 0}">
+                  <div class="col-lg-12 col-md-12 text-center">
+                    <div class="pagination-area">
+                      <c:choose>
+                        <c:when test="${activePage <= 1}">
+                          <span class="prev page-numbers disabled">
+                            <i class="bx bx-chevron-left"></i>
+                          </span>
+                        </c:when>
+
+                        <c:otherwise>
+                          <a
+                            href="shop?activePage=${activePage-1}"
+                            class="prev page-numbers"
+                          >
+                            <i class="bx bx-chevron-left"></i>
+                          </a>
+                        </c:otherwise>
+                      </c:choose>
+
+                      <c:forEach var="i" begin="1" end="${pagination}">
+                        <a
+                          href="shop?activePage=${i}"
+                          class="page-numbers ${i == activePage ? 'current' : ''}"
+                          >${i}</a
+                        >
+                      </c:forEach>
+
+                      <c:choose>
+                        <c:when test="${activePage >= pagination}">
+                          <span class="next page-numbers disabled">
+                            <i class="bx bx-chevron-right"></i>
+                          </span>
+                        </c:when>
+
+                        <c:otherwise>
+                          <a
+                            href="shop?activePage=${activePage+1}"
+                            class="next page-numbers"
+                          >
+                            <i class="bx bx-chevron-right"></i>
+                          </a>
+                        </c:otherwise>
+                      </c:choose>
+                    </div>
+                  </div>
+                </c:if>
               </div>
             </div>
-            <div class="row g-4">
-              <div class="col-lg-3">
-                <div class="row g-4">
-                  <div class="col-lg-12">
-                    <div class="mb-3">
-                      <h4>Categories</h4>
-                      <ul class="list-unstyled fruite-categorie">
-                        <c:forEach var="category" items="${allCategories}">
-                          <li>
-                            <div
-                              class="d-flex justify-content-between fruite-name"
-                            >
-                              <a
-                                href="shop?activeCategory=${category.categoryId}#products-section"
-                                ><i class="fas fa-apple-alt me-2"></i
-                                >${category.categoryName}</a
-                              >
-                              <span
-                                >${categoryWithSize[category.categoryName]}</span
-                              >
-                            </div>
-                          </li>
-                        </c:forEach>
-                      </ul>
-                    </div>
-                  </div>
-                  <div class="col-lg-12">
-                    <div class="mb-3">
-                      <h4 class="mb-2">Price</h4>
-                      <input
-                        type="range"
-                        class="form-range w-100"
-                        id="rangeInput"
-                        name="rangeInput"
-                        min="0"
-                        max="500"
-                        value="0"
-                        oninput="amount.value=rangeInput.value"
-                      />
-                      <output
-                        id="amount"
-                        name="amount"
-                        min-velue="0"
-                        max-value="500"
-                        for="rangeInput"
-                        >0</output
-                      >
-                    </div>
-                  </div>
-                  <div class="col-lg-12">
-                    <div class="mb-3">
-                      <h4>Additional</h4>
-                      <div class="mb-2">
-                        <input
-                          type="radio"
-                          class="me-2"
-                          id="Categories-1"
-                          name="Categories-1"
-                          value="Beverages"
-                        />
-                        <label for="Categories-1"> Organic</label>
-                      </div>
-                      <div class="mb-2">
-                        <input
-                          type="radio"
-                          class="me-2"
-                          id="Categories-2"
-                          name="Categories-1"
-                          value="Beverages"
-                        />
-                        <label for="Categories-2"> Fresh</label>
-                      </div>
-                      <div class="mb-2">
-                        <input
-                          type="radio"
-                          class="me-2"
-                          id="Categories-3"
-                          name="Categories-1"
-                          value="Beverages"
-                        />
-                        <label for="Categories-3"> Sales</label>
-                      </div>
-                      <div class="mb-2">
-                        <input
-                          type="radio"
-                          class="me-2"
-                          id="Categories-4"
-                          name="Categories-1"
-                          value="Beverages"
-                        />
-                        <label for="Categories-4"> Discount</label>
-                      </div>
-                      <div class="mb-2">
-                        <input
-                          type="radio"
-                          class="me-2"
-                          id="Categories-5"
-                          name="Categories-1"
-                          value="Beverages"
-                        />
-                        <label for="Categories-5"> Expired</label>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-lg-12">
-                    <h4 class="mb-3">Featured products</h4>
-                    <div
-                      class="d-flex align-items-center justify-content-start"
-                    >
-                      <div
-                        class="rounded me-4"
-                        style="width: 100px; height: 100px"
-                      >
-                        <img
-                          src="img/featur-1.jpg"
-                          class="img-fluid rounded"
-                          alt=""
-                        />
-                      </div>
-                      <div>
-                        <h6 class="mb-2">Big Banana</h6>
-                        <div class="d-flex mb-2">
-                          <i class="fa fa-star text-secondary"></i>
-                          <i class="fa fa-star text-secondary"></i>
-                          <i class="fa fa-star text-secondary"></i>
-                          <i class="fa fa-star text-secondary"></i>
-                          <i class="fa fa-star"></i>
-                        </div>
-                        <div class="d-flex mb-2">
-                          <h5 class="fw-bold me-2">2.99 $</h5>
-                          <h5 class="text-danger text-decoration-line-through">
-                            4.11 $
-                          </h5>
-                        </div>
-                      </div>
-                    </div>
-                    <div
-                      class="d-flex align-items-center justify-content-start"
-                    >
-                      <div
-                        class="rounded me-4"
-                        style="width: 100px; height: 100px"
-                      >
-                        <img
-                          src="img/featur-2.jpg"
-                          class="img-fluid rounded"
-                          alt=""
-                        />
-                      </div>
-                      <div>
-                        <h6 class="mb-2">Big Banana</h6>
-                        <div class="d-flex mb-2">
-                          <i class="fa fa-star text-secondary"></i>
-                          <i class="fa fa-star text-secondary"></i>
-                          <i class="fa fa-star text-secondary"></i>
-                          <i class="fa fa-star text-secondary"></i>
-                          <i class="fa fa-star"></i>
-                        </div>
-                        <div class="d-flex mb-2">
-                          <h5 class="fw-bold me-2">2.99 $</h5>
-                          <h5 class="text-danger text-decoration-line-through">
-                            4.11 $
-                          </h5>
-                        </div>
-                      </div>
-                    </div>
-                    <div
-                      class="d-flex align-items-center justify-content-start"
-                    >
-                      <div
-                        class="rounded me-4"
-                        style="width: 100px; height: 100px"
-                      >
-                        <img
-                          src="img/featur-3.jpg"
-                          class="img-fluid rounded"
-                          alt=""
-                        />
-                      </div>
-                      <div>
-                        <h6 class="mb-2">Big Banana</h6>
-                        <div class="d-flex mb-2">
-                          <i class="fa fa-star text-secondary"></i>
-                          <i class="fa fa-star text-secondary"></i>
-                          <i class="fa fa-star text-secondary"></i>
-                          <i class="fa fa-star text-secondary"></i>
-                          <i class="fa fa-star"></i>
-                        </div>
-                        <div class="d-flex mb-2">
-                          <h5 class="fw-bold me-2">2.99 $</h5>
-                          <h5 class="text-danger text-decoration-line-through">
-                            4.11 $
-                          </h5>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="d-flex justify-content-center my-4">
-                      <a
-                        href="#"
-                        class="btn border border-secondary px-4 py-3 rounded-pill text-primary w-100"
-                        >Vew More</a
-                      >
-                    </div>
-                  </div>
-                  <div class="col-lg-12">
-                    <div class="position-relative">
-                      <img
-                        src="img/banner-fruits.jpg"
-                        class="img-fluid w-100 rounded"
-                        alt=""
-                      />
-                      <div
-                        class="position-absolute"
-                        style="
-                          top: 50%;
-                          right: 10px;
-                          transform: translateY(-50%);
-                        "
-                      >
-                        <h3 class="text-secondary fw-bold">
-                          Fresh <br />
-                          Fruits <br />
-                          Banner
-                        </h3>
-                      </div>
-                    </div>
+            <div class="col-lg-3">
+              <div class="product-side-bar">
+                <div class="search-widget">
+                  <form class="search-form" action="search" method="post">
+                    <input
+                      name="productName"
+                      value="${productName}"
+                      type="text"
+                      class="form-control"
+                      placeholder="Tìm kiếm trái cây..."
+                    />
+                    <button type="submit">
+                      <i class="bx bx-search"></i>
+                    </button>
+                  </form>
+                </div>
+                <div class="product-side-bar-widget">
+                  <h3 class="title">Trái cây nội & ngoại</h3>
+                  <div class="product-side-categories">
+                    <ul>
+                      <c:forEach var="category" items="${allCategories}">
+                        <li
+                          class="${category.categoryId == activeCate ? 'active' : ''}"
+                        >
+                          <a href="shop?activeCate=${category.categoryId}"
+                            >${category.categoryName}</a
+                          >
+                        </li>
+                      </c:forEach>
+                    </ul>
                   </div>
                 </div>
-              </div>
-              <div class="col-lg-9">
-                <div class="row g-4 justify-content-center">
-                  <c:forEach var="product" items="${pageProducts}">
-                    <div class="col-md-6 col-lg-6 col-xl-4 mb-4">
-                      <div class="rounded position-relative fruite-item h-100">
-                        <div class="fruite-img">
-                          <img
-                            src="img/${product.productImage}"
-                            class="img-fluid w-100 rounded-top"
-                            alt=""
-                          />
-                        </div>
-                        <div
-                          class="text-white bg-secondary px-3 py-1 rounded position-absolute"
-                          style="top: 10px; left: 10px"
+
+                <div class="product-side-bar-widget">
+                  <h3 class="title">Trái cây theo mùa</h3>
+                  <div class="product-side-categories">
+                    <ul>
+                      <c:forEach var="season" items="${allSeasons}">
+                        <li
+                          class="${season.seasonId == activeSeason ? 'active' : ''}"
                         >
-                          ${product.category.categoryName}
-                        </div>
-                        <div
-                          class="p-4 border border-secondary border-top-0 rounded-bottom d-flex flex-column"
-                        >
-                          <h4 class="text-center">${product.productName}</h4>
-                          <p class="flex-grow-1">
-                            ${product.productDescription}
-                          </p>
-                          <div
-                            class="d-flex justify-content-between flex-lg-wrap"
+                          <a href="shop?activeSeason=${season.seasonId}"
+                            >${season.seasonName}</a
                           >
-                            <p class="text-dark fs-5 fw-bold mb-0">
-                              <fmt:formatNumber
-                                value="${product.productPrice}"
-                                type="currency"
-                                currencySymbol="vnđ"
-                                maxFractionDigits="2"
-                              />
-                              / kg
-                            </p>
-                            <a
-                              href="#"
-                              class="btn border border-secondary rounded-pill px-3 text-primary"
-                            >
-                              <i
-                                class="fa fa-shopping-bag me-2 text-primary"
-                              ></i>
-                              Add to cart
-                            </a>
-                          </div>
-                        </div>
+                        </li>
+                      </c:forEach>
+                    </ul>
+                  </div>
+                </div>
+
+                <div class="product-side-bar-widget">
+                  <h3 class="title">High Rated Product</h3>
+                  <div class="product-popular-post">
+                    <article class="item">
+                      <a href="news-details.html" class="thumb">
+                        <span class="full-image cover bg1" role="img"></span>
+                      </a>
+                      <div class="info">
+                        <h4 class="title-text">
+                          <a href="news-details.html"> Fresh Organic Meat </a>
+                        </h4>
+                        <p>$12.0 <del>$15.5</del></p>
                       </div>
-                    </div>
-                  </c:forEach>
-                  <c:if test="${totalPages > 1}">
-                    <div class="col-12">
-                      <ul class="pagination d-flex justify-content-center mt-5">
-                        <li
-                          class="page-item ${currentPage == 1 ? 'disabled' : ''}"
-                        >
-                          <a
-                            class="rounded page-link"
-                            href="shop?activeCategory=${activeCategory}&activePage=${currentPage - 1}#products-section"
-                            >«</a
-                          >
-                        </li>
+                    </article>
 
-                        <c:forEach var="i" begin="1" end="${totalPages}">
-                          <li
-                            class="page-item ${i == currentPage ? 'active' : ''}"
-                          >
-                            <a
-                              class="rounded page-link"
-                              href="shop?activeCategory=${activeCategory}&activePage=${i}#products-section"
-                              >${i}</a
-                            >
-                          </li>
-                        </c:forEach>
+                    <article class="item">
+                      <a href="news-details.html" class="thumb">
+                        <span class="full-image cover bg2" role="img"></span>
+                      </a>
+                      <div class="info">
+                        <h4 class="title-text">
+                          <a href="news-details.html"> Fresh Pineapple </a>
+                        </h4>
+                        <p>$3.50 <del>$4.0</del></p>
+                      </div>
+                    </article>
 
-                        <li
-                          class="page-item ${currentPage == totalPages ? 'disabled' : ''}"
-                        >
-                          <a
-                            class="rounded page-link"
-                            href="shop?activeCategory=${activeCategory}&activePage=${currentPage + 1}#products-section"
-                            >»</a
-                          >
-                        </li>
-                      </ul>
-                    </div>
-                  </c:if>
+                    <article class="item">
+                      <a href="news-details.html" class="thumb">
+                        <span class="full-image cover bg3" role="img"></span>
+                      </a>
+                      <div class="info">
+                        <h4 class="title-text">
+                          <a href="news-details.html"> Fresh Banana </a>
+                        </h4>
+                        <p>$1.2 <del>$1.5</del></p>
+                      </div>
+                    </article>
+
+                    <article class="item">
+                      <a href="news-details.html" class="thumb">
+                        <span class="full-image cover bg4" role="img"></span>
+                      </a>
+                      <div class="info">
+                        <h4 class="title-text">
+                          <a href="news-details.html"> Rear Organic Saffron </a>
+                        </h4>
+                        <p>$124.0</p>
+                      </div>
+                    </article>
+                  </div>
                 </div>
               </div>
             </div>
@@ -407,7 +286,198 @@ isELIgnored="false" %>
         </div>
       </div>
     </div>
-    <!-- Fruits Shop End-->
-    <%@ include file="includes/footer.jsp" %>
+    <!-- Product Area End -->
+
+    <!-- Footer Area -->
+    <footer class="footer-area footer-bg">
+      <div class="container">
+        <div class="footer-top pt-100 pb-70">
+          <div class="row">
+            <div class="col-lg-3 col-md-6">
+              <div class="footer-widget footer-widget-color-2">
+                <div class="footer-logo">
+                  <a href="index.html">
+                    <img
+                      src="assets/images/logos/footer-logo.png"
+                      class="footer-logo1"
+                      alt="Images"
+                    />
+                    <img
+                      src="assets/images/logos/logo-1.png"
+                      class="footer-logo2"
+                      alt="Images"
+                    />
+                  </a>
+                </div>
+                <p>
+                  We are one of the best & quality full in market. Let's join.
+                </p>
+                <ul class="footer-list-contact">
+                  <li>
+                    <i class="bx bx-home"></i>
+                    <a href="#">Virgil A Stanton, Virginia, USA</a>
+                  </li>
+                  <li>
+                    <i class="bx bx-phone-call"></i>
+                    <a href="tel:+1(123)-456-7890">+1 (123) 456 7890</a>
+                  </li>
+                  <li>
+                    <i class="bx bx-envelope"></i>
+                    <a href="mailto:hello@hilo.com">hello@hilo.com</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6">
+              <div class="footer-widget footer-widget-color-2">
+                <h3>Services</h3>
+                <ul class="footer-list">
+                  <li>
+                    <a href="wordpress-hosting.html" target="_blank">
+                      My Account
+                    </a>
+                  </li>
+                  <li>
+                    <a href="tracking-order.html" target="_blank">
+                      Tracking Order
+                    </a>
+                  </li>
+                  <li>
+                    <a href="customer-services.html" target="_blank">
+                      Customer Services
+                    </a>
+                  </li>
+                  <li>
+                    <a href="compare.html" target="_blank"> Compare </a>
+                  </li>
+                  <li>
+                    <a href="wishlist.html" target="_blank"> Wishlist </a>
+                  </li>
+                  <li>
+                    <a href="privacy-policy.html" target="_blank">
+                      Privacy Policy
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6">
+              <div class="footer-widget footer-widget-color-2">
+                <h3>Information</h3>
+                <ul class="footer-list">
+                  <li>
+                    <a href="index.html" target="_blank"> Home </a>
+                  </li>
+                  <li>
+                    <a href="about.html" target="_blank"> About Us </a>
+                  </li>
+                  <li>
+                    <a href="blog-details.html" target="_blank">
+                      Blog Details
+                    </a>
+                  </li>
+                  <li>
+                    <a href="shop-details.html" target="_blank">
+                      Shop Details
+                    </a>
+                  </li>
+                  <li>
+                    <a href="testimonials.html" target="_blank">
+                      Testimonials
+                    </a>
+                  </li>
+                  <li>
+                    <a href="team.html" target="_blank"> Team </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6">
+              <div class="footer-widget footer-widget-color-2">
+                <h3>Follow Us</h3>
+                <p>
+                  We are one of the best & quality full in market. Let's join.
+                </p>
+                <form class="footer-form-area">
+                  <input
+                    type="email"
+                    class="form-control"
+                    placeholder="Email"
+                  />
+                  <button class="subscribe-btn" type="submit">
+                    <i class="bx bx-paper-plane"></i>
+                  </button>
+                </form>
+
+                <ul class="social-link">
+                  <li>
+                    <a href="#" target="_blank"
+                      ><i class="bx bxl-facebook"></i
+                    ></a>
+                  </li>
+                  <li>
+                    <a href="#" target="_blank"
+                      ><i class="bx bxl-twitter"></i
+                    ></a>
+                  </li>
+                  <li>
+                    <a href="#" target="_blank"
+                      ><i class="bx bxl-instagram"></i
+                    ></a>
+                  </li>
+                  <li>
+                    <a href="#" target="_blank"
+                      ><i class="bx bxl-youtube"></i
+                    ></a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="copy-right-area-three">
+          <div class="copy-right-text">
+            <p>
+              Copyright @
+              <script>
+                document.write(new Date().getFullYear());
+              </script>
+              Hilo. All Rights Reserved by
+              <a href="https://hibootstrap.com/" target="_blank">HiBootstrap</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </footer>
+    <!-- Footer Area End -->
+
+    <!-- Jquery Min JS -->
+    <script src="assets/js/jquery.min.js"></script>
+    <!-- Bootstrap Min JS -->
+    <script src="assets/js/bootstrap.bundle.min.js"></script>
+    <!-- Owl Carousel Min JS -->
+    <script src="assets/js/owl.carousel.min.js"></script>
+    <!-- Nice Select Min JS -->
+    <script src="assets/js/jquery.nice-select.min.js"></script>
+    <!-- Wow Min JS -->
+    <script src="assets/js/wow.min.js"></script>
+    <!-- Meanmenu JS -->
+    <script src="assets/js/meanmenu.js"></script>
+    <!-- Jquery Ui Min JS -->
+    <script src="assets/js/jquery-ui.min.js"></script>
+    <!-- Ajaxchimp Min JS -->
+    <script src="assets/js/jquery.ajaxchimp.min.js"></script>
+    <!-- Form Validator Min JS -->
+    <script src="assets/js/form-validator.min.js"></script>
+    <!-- Contact Form JS -->
+    <script src="assets/js/contact-form-script.js"></script>
+    <!-- Mixitup Min JS -->
+    <script src="assets/js/mixitup.min.js"></script>
+    <!-- Custom JS -->
+    <script src="assets/js/custom.js"></script>
   </body>
 </html>

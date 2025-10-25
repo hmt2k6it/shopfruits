@@ -1,9 +1,7 @@
 package controllers;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,43 +12,56 @@ import javax.servlet.http.HttpServletResponse;
 import dao.Dao;
 import models.Category;
 import models.Product;
+import models.Season;
 
 @WebServlet(urlPatterns = { "/shop" })
 public class ShopController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String page = "shop";
-        req.setAttribute("page", page);
         Dao dao = new Dao();
-        Map<String, Integer> categoryWithSize = dao.getCategoryWithSize();
-        List<Category> allCategories = dao.getAllCategory();
-        String activeCategory = req.getParameter("activeCategory");
-        if (activeCategory == null || "0".equals(activeCategory)) {
-            activeCategory = "1";
-        }
         String activePage = req.getParameter("activePage");
-        int currentPage = 1;
-        if (activePage != null) {
-            try {
-                currentPage = Integer.parseInt(activePage);
-            } catch (NumberFormatException e) {
-                currentPage = 1;
+        if (activePage == null) {
+            activePage = "1";
+        }
+        String activeSeason = req.getParameter("activeSeason");
+        String activeCate = req.getParameter("activeCate");
+        // Lấy dữ liệu từ database
+        List<Category> allCategories = dao.getAllCategory();
+        List<Season> allSeasons = dao.getAllSeason();
+        List<Product> products;
+        if (activeSeason != null) {
+            products = dao.getProductsBySeason(activeSeason);
+        } else {
+            if (activeCate == null) {
+                products = dao.getAllProduct();
+            } else {
+                products = dao.getProductsByCategory(activeCate);
             }
         }
-        List<Product> currentCategoryProducts = dao.getProductsByCategory(Integer.parseInt(activeCategory));
-        int totalProducts = currentCategoryProducts.size();
-        int totalPages = (int) Math.ceil((double) totalProducts / 12);
-        int startIndex = (currentPage - 1) * 12;
-        int endIndex = Math.min(startIndex + 12, totalProducts);
-        List<Product> pageProducts = new ArrayList<>(currentCategoryProducts.subList(startIndex, endIndex));
-        req.setAttribute("pageProducts", pageProducts);
-        req.setAttribute("totalPages", totalPages);
-        req.setAttribute("categoryWithSize", categoryWithSize);
+        // Xử lý logic
+        int pagination = (int) Math.ceil((double) products.size() / 6);
+        int startIndex = (Integer.parseInt(activePage) - 1) * 6;
+        int endIndex = Math.min(startIndex + 6, products.size());
+        List<Product> productPage = products.subList(startIndex, endIndex);
+        // Đẩy dữ liệu lên jsp
         req.setAttribute("allCategories", allCategories);
-        req.setAttribute("activeCategory", activeCategory);
-        req.setAttribute("currentPage", currentPage);
+        req.setAttribute("allSeasons", allSeasons);
+        req.setAttribute("activePage", activePage);
+        req.setAttribute("activeCate", activeCate);
+        req.setAttribute("activeSeason", activeSeason);
+        req.setAttribute("pagination", pagination);
+        req.setAttribute("startIndex", startIndex);
+        req.setAttribute("endIndex", endIndex);
+        req.setAttribute("productPage", productPage);
+        req.setAttribute("totalProducts", products.size());
+
         req.getRequestDispatcher("/views/shop.jsp").forward(req, resp);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        doGet(req, resp);
     }
 
 }

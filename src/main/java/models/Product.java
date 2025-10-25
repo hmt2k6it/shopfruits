@@ -7,15 +7,21 @@ public class Product {
     private String productImage;
     private long productPrice;
     private Category category;
+    private Season season;
 
     public Product(int productId, String productName, String productDescription, String productImage, long productPrice,
-            Category category) {
+            Category category, Season season) {
         this.productId = productId;
         this.productName = productName;
         this.productDescription = productDescription;
         this.productImage = productImage;
         this.productPrice = productPrice;
         this.category = category;
+        this.season = season;
+    }
+
+    public Product() {
+
     }
 
     public int getProductId() {
@@ -68,9 +74,17 @@ public class Product {
 
     @Override
     public String toString() {
-        return "Product [productId=" + productId + ", productName=" + productName + ", productPrice=" + productPrice
-                + ", productImage=" + productImage + ", productDescription=" + productDescription + ", category="
-                + category + "]";
+        return "Product [productId=" + productId + ", productName=" + productName + ", productDescription="
+                + productDescription + ", productImage=" + productImage + ", productPrice=" + productPrice
+                + ", category=" + category + ", season=" + season + "]";
+    }
+
+    public Season getSeason() {
+        return season;
+    }
+
+    public void setSeason(Season season) {
+        this.season = season;
     }
 
 }
