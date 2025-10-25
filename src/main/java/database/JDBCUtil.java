@@ -3,8 +3,6 @@ package database;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-// Bỏ import java.net.URI và java.net.URISyntaxException
-// vì chúng ta không dùng chúng nữa
 
 public class JDBCUtil {
 
@@ -23,30 +21,32 @@ public class JDBCUtil {
         return connection;
     }
     
-    // --- ĐÃ SỬA LỖI: Phương thức này giờ đây phân tích chuỗi DATABASE_URL bằng tay ---
-    private static Connection getRailwayConnection(String dbUrl)
+    /**
+     * Phương thức này xử lý kết nối Cloud (Railway, Aiven,...)
+     * bằng cách phân tích chuỗi DATABASE_URL
+     */
+    private static Connection getCloudConnection(String dbUrl)
             throws ClassNotFoundException, SQLException {
         
-        System.out.println("Connecting to Railway MySQL...");
+        System.out.println("Connecting to Cloud MySQL...");
+        System.out.println("Parsing DATABASE_URL: " + dbUrl);
 
-        // dbUrl có dạng: mysql://user:password@host:port/database
+        // dbUrl có dạng: mysql://user:password@host:port/database?params...
 
-        // --- BẮT ĐẦU SỬA LỖI PARSING ---
-        
         // 1. Bỏ tiền tố "mysql://"
         if (!dbUrl.startsWith("mysql://")) {
             throw new SQLException("Invalid DATABASE_URL: must start with mysql://");
         }
-        String connectionString = dbUrl.substring("mysql://".length()); // Bỏ 8 ký tự đầu
+        String connectionString = dbUrl.substring("mysql://".length());
 
-        // 2. Tách user:password và host:port/db tại ký tự '@'
+        // 2. Tách user:password và host:port/db... tại ký tự '@'
         String[] userInfoAndHost = connectionString.split("@", 2);
         if (userInfoAndHost.length != 2) {
             throw new SQLException("Invalid DATABASE_URL: missing '@' separator.");
         }
         
         String userInfo = userInfoAndHost[0];
-        String hostInfo = userInfoAndHost[1];
+        String hostInfo = userInfoAndHost[1]; // Ví dụ: host:port/db?param=value
 
         // 3. Tách username và password tại ký tự ':'
         String[] userPass = userInfo.split(":", 2);
@@ -56,14 +56,14 @@ public class JDBCUtil {
         String username = userPass[0];
         String password = userPass[1];
 
-        // 4. Tách host:port và database name tại ký tự '/'
+        // 4. Tách host:port và (database + params) tại ký tự '/' đầu tiên
         String[] hostPortAndDb = hostInfo.split("/", 2);
         if (hostPortAndDb.length != 2) {
             throw new SQLException("Invalid DATABASE_URL: missing '/' separator for database name.");
         }
         
         String hostPort = hostPortAndDb[0];
-        String dbName = hostPortAndDb[1];
+        String dbPathAndParams = hostPortAndDb[1]; // Ví dụ: "defaultdb?ssl-mode=REQUIRED" hoặc "railway"
         
         // 5. Tách host và port tại ký tự ':'
         String[] hostAndPort = hostPort.split(":", 2);
@@ -72,26 +72,29 @@ public class JDBCUtil {
         }
         
         String host = hostAndPort[0];
-        String port = hostAndPort[1]; // Giữ port ở dạng String
+        String port = hostAndPort[1];
         
-        // --- KẾT THÚC SỬA LỖI PARSING ---
+        // --- SỬA LỖI QUAN TRỌNG ---
+        // Tạo chuỗi JDBC URL.
+        // Chúng ta giữ nguyên phần dbPathAndParams (bao gồm cả database và tham số)
+        // Thay vì tự ý thêm "?useSSL=false" như trước
+        String jdbcUrl = "jdbc:mysql://" + host + ":" + port + "/" + dbPathAndParams;
+        // --- KẾT THÚC SỬA LỖI ---
 
-        // Tạo chuỗi JDBC URL cho MySQL
-        // Dạng: jdbc:mysql://host:port/database
-        String jdbcUrl = "jdbc:mysql://" + host + ":" + port + "/" + dbName + "?useSSL=false";
+        System.out.println("Generated JDBC URL: " + jdbcUrl);
 
         // Tải driver MySQL
         Class.forName("com.mysql.cj.jdbc.Driver");
         
         Connection connection = DriverManager.getConnection(jdbcUrl, username, password);
-        System.out.println("Successfully connected to Railway MySQL!");
+        System.out.println("Successfully connected to Cloud MySQL!");
         return connection;
     }
 
     /**
      * Phương thức chính để lấy kết nối.
      * Sẽ tự động kiểm tra biến môi trường "DATABASE_URL".
-     * Nếu có, kết nối tới Railway.
+     * Nếu có, kết nối tới Cloud.
      * Nếu không, kết nối tới localhost.
      */
     public static Connection getConnection() {
@@ -102,8 +105,9 @@ public class JDBCUtil {
                 // Không có DATABASE_URL, dùng local
                 return getLocalConnection();
             } else {
-                // Có DATABASE_URL, dùng Railway
-                return getRailwayConnection(dbUrl); 
+                // Có DATABASE_URL, dùng cloud (Aiven hoặc Railway)
+                // Đổi tên hàm gọi
+                return getCloudConnection(dbUrl); 
             }
         } catch (Exception e) {
             e.printStackTrace();
