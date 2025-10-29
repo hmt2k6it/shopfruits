@@ -1,3 +1,4 @@
+controllers/UpdateQuantityServlet.class
 controllers/LoginController.class
 models/Order.class
 controllers/ViewCartController.class
@@ -6,9 +7,7 @@ models/OrderDetail.class
 models/Item.class
 database/JDBCUtil.class
 controllers/CheckOutController.class
-controllers/Product.class
 controllers/ShopController.class
-controllers/MyAccountController.class
 models/Season.class
 controllers/LogoutController.class
 models/Product.class
@@ -24,4 +23,5 @@ controllers/UserCURDServlet.class
 controllers/SearchController.class
 controllers/HomeController.class
 controllers/UpdateStatusServlet.class
+controllers/RemoveCartController.class
 controllers/AdminDashboardServlet.class

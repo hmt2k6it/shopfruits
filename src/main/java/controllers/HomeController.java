@@ -8,8 +8,10 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import dao.Dao;
+import models.Cart;
 import models.Product;
 
 @WebServlet(urlPatterns = { "/home" })
@@ -17,6 +19,12 @@ public class HomeController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        HttpSession session = req.getSession(true);
+        Cart cart = (Cart) session.getAttribute("cart");
+        if (cart == null) {
+            cart = new Cart();
+            session.setAttribute("cart", cart);
+        }
         Dao dao = new Dao();
         String activePage = req.getParameter("activePage");
         if (activePage == null) {
@@ -33,6 +41,7 @@ public class HomeController extends HttpServlet {
         req.setAttribute("activePage", activePage);
         req.setAttribute("pagination", pagination);
         req.setAttribute("productPage", productPage);
+        req.setAttribute("cart", cart);
         req.getRequestDispatcher("index.jsp").forward(req, resp);
     }
 

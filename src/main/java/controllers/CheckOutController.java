@@ -22,22 +22,24 @@ public class CheckOutController extends HttpServlet {
         Account account = (Account) session.getAttribute("account");
         if (account == null) {
             resp.sendRedirect("login");
+            return;
         }
         Cart cart = (Cart) session.getAttribute("cart");
-        if (cart == null) {
-            req.getRequestDispatcher("viewCart").forward(req, resp);
+        if (cart == null || cart.isEmpty()) {
+            resp.sendRedirect("viewCart");
+            return;
         }
         String shippingAddress = req.getParameter("shippingAddress");
         String shippingPhone = req.getParameter("shippingPhone");
-        String paypaymentMethod = req.getParameter("paymentMethod");
+        String paymentMethod = req.getParameter("paymentMethod");
         shippingAddress = shippingAddress + " " + shippingPhone;
         Dao dao = new Dao();
-        boolean confirm = dao.confirmOrder(account, cart, shippingAddress, paypaymentMethod);
+        boolean confirm = dao.confirmOrder(account, cart, shippingAddress, paymentMethod);
         if (confirm) {
             session.removeAttribute("cart");
             resp.sendRedirect("compplete");
         } else {
-            req.getRequestDispatcher("viewCart").forward(req, resp);
+            resp.sendRedirect("viewCart");
         }
     }
 }

@@ -63,4 +63,24 @@ public class Cart {
     public boolean isEmpty() {
         return items.isEmpty();
     }
+
+    public void deleteItem(String productId) {
+        int id = Integer.parseInt(productId);
+        items.remove(id);
+    }
+
+    public int getSize() {
+        if (items.isEmpty()) {
+            return 0;
+        } else {
+            return items.size();
+        }
+    }
+
+    public void updateItemQuantity(int productId, int quantity) {
+        if (items.containsKey(productId)) {
+            Item item = items.get(productId);
+            item.setQuantity(quantity);
+        }
+    }
 }

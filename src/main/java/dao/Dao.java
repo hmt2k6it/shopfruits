@@ -562,46 +562,196 @@ public class Dao {
             }
         }
     }
-    public boolean updateOrderStatus(int orderId, String newStatus) {
-    String sql = "UPDATE orders SET status_order = ? WHERE order_id = ?";
-    try (Connection connection = JDBCUtil.getConnection();
-         PreparedStatement ps = connection.prepareStatement(sql)) {
-        
-        ps.setString(1, newStatus);
-        ps.setInt(2, orderId);
-        
-        return ps.executeUpdate() > 0;
-    } catch (Exception e) {
-        e.printStackTrace();
-        return false;
-    }
-}
 
-// 2. HÀM LẤY CHI TIẾT ĐƠN HÀNG
-public List<OrderDetail> getOrderDetailsById(int orderId) {
-    List<OrderDetail> details = new ArrayList<>();
-    String sql = "SELECT p.product_name, p.product_img, od.quantity, od.price_at_purchase "
-               + "FROM orderdetails od "
-               + "JOIN products p ON od.product_id = p.product_id "
-               + "WHERE od.order_id = ?";
-    
-    try (Connection connection = JDBCUtil.getConnection();
-         PreparedStatement ps = connection.prepareStatement(sql)) {
-        
-        ps.setInt(1, orderId);
-        ResultSet rs = ps.executeQuery();
-        
-        while (rs.next()) {
-            OrderDetail detail = new OrderDetail();
-            detail.setProductName(rs.getString("product_name"));
-            detail.setProductImage(rs.getString("product_img"));
-            detail.setQuantity(rs.getInt("quantity"));
-            detail.setPriceAtPurchase(rs.getLong("price_at_purchase"));
-            details.add(detail);
+    public boolean updateOrderStatus(int orderId, String newStatus) {
+        String sql = "UPDATE orders SET status_order = ? WHERE order_id = ?";
+        try (Connection connection = JDBCUtil.getConnection();
+                PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            ps.setString(1, newStatus);
+            ps.setInt(2, orderId);
+
+            return ps.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
         }
-    } catch (Exception e) {
-        e.printStackTrace();
     }
-    return details;
-}
+
+    // 2. HÀM LẤY CHI TIẾT ĐƠN HÀNG
+    public List<OrderDetail> getOrderDetailsById(int orderId) {
+        List<OrderDetail> details = new ArrayList<>();
+        String sql = "SELECT p.product_name, p.product_img, od.quantity, od.price_at_purchase "
+                + "FROM orderdetails od "
+                + "JOIN products p ON od.product_id = p.product_id "
+                + "WHERE od.order_id = ?";
+
+        try (Connection connection = JDBCUtil.getConnection();
+                PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            ps.setInt(1, orderId);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                OrderDetail detail = new OrderDetail();
+                detail.setProductName(rs.getString("product_name"));
+                detail.setProductImage(rs.getString("product_img"));
+                detail.setQuantity(rs.getInt("quantity"));
+                detail.setPriceAtPurchase(rs.getLong("price_at_purchase"));
+                details.add(detail);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return details;
+    }
+
+    public boolean removeItemFromCart(int userId, int productId) {
+        // Câu lệnh SQL để xóa chính xác 1 hàng
+        String sql = "DELETE FROM cartItems WHERE user_id = ? AND product_id = ?";
+
+        try (Connection connection = JDBCUtil.getConnection();
+                PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            // 1. Set tham số cho user_id
+            ps.setInt(1, userId);
+            // 2. Set tham số cho product_id
+            ps.setInt(2, productId);
+
+            // 3. Thực thi lệnh xóa và kiểm tra xem có hàng nào bị ảnh hưởng không
+            int rowsAffected = ps.executeUpdate();
+
+            // Trả về true nếu có 1 hàng đã bị xóa
+            return rowsAffected > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Trả về false nếu có lỗi xảy ra
+            return false;
+        }
+    }
+
+    public boolean updateCartItemQuantity(int userId, int productId, int newQuantity) {
+        // Dùng 'ON DUPLICATE KEY UPDATE' để tránh lỗi,
+        // nhưng ở đây UPDATE trực tiếp sẽ tốt hơn
+        String sql = "UPDATE cartItems SET quantity = ? WHERE user_id = ? AND product_id = ?";
+
+        try (Connection connection = JDBCUtil.getConnection();
+                PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            ps.setInt(1, newQuantity);
+            ps.setInt(2, userId);
+            ps.setInt(3, productId);
+
+            return ps.executeUpdate() > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public Account getAccountById(int userId) {
+        String sql = "SELECT * FROM account WHERE user_id = ?";
+        try (Connection connection = JDBCUtil.getConnection();
+                PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            ps.setInt(1, userId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    // Giả sử Account có constructor hoặc setters đầy đủ
+                    // Cần thêm các trường firstName, lastName, phone, address
+                    return new Account(
+                            rs.getInt("user_id"),
+                            rs.getString("username"),
+                            rs.getString("password"),
+                            rs.getString("email"),
+                            rs.getInt("is_admin")
+                    // , rs.getString("firstName"), // Thêm các trường mới
+                    // , rs.getString("lastName"),
+                    // , rs.getString("phone"),
+                    // , rs.getString("address")
+                    );
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    // 2. Lấy danh sách đơn hàng của một User
+    public List<Order> getOrdersByUserId(int userId) {
+        List<Order> orders = new ArrayList<>();
+        // Join với user nếu cần lấy tên user
+        String sql = "SELECT * FROM orders WHERE user_id = ? ORDER BY order_date DESC";
+        try (Connection connection = JDBCUtil.getConnection();
+                PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            ps.setInt(1, userId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Order order = new Order();
+                    order.setOrderId(rs.getInt("order_id"));
+                    order.setUserId(rs.getInt("user_id"));
+                    order.setOrderDate(rs.getTimestamp("order_date")); // Dùng getTimestamp cho DATETIME
+                    order.setTotalAmount(rs.getDouble("total_amount"));
+                    order.setStatus(rs.getString("status_order")); // Khớp tên cột
+                    order.setShippingAddress(rs.getString("shipping_address"));
+                    order.setPaymentMethod(rs.getString("payment_method"));
+                    orders.add(order);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return orders;
+    }
+
+    // 3. Cập nhật thông tin profile (KHÔNG cập nhật username, password)
+    public boolean updateUserProfile(int userId, String firstName, String lastName, String email, String phone) {
+        // Giả sử bảng account có các cột first_name, last_name, phone_number
+        // String sql = "UPDATE account SET first_name = ?, last_name = ?, email = ?,
+        // phone_number = ? WHERE user_id = ?";
+
+        // Nếu chỉ có email:
+        String sql = "UPDATE account SET email = ? WHERE user_id = ?"; // Chỉ cập nhật email ví dụ
+
+        try (Connection connection = JDBCUtil.getConnection();
+                PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            ps.setString(1, email); // Chỉ email ví dụ
+            // ps.setString(1, firstName);
+            // ps.setString(2, lastName);
+            // ps.setString(3, email);
+            // ps.setString(4, phone);
+            ps.setInt(2, userId); // userId là tham số cuối
+
+            return ps.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    // 4. Cập nhật mật khẩu
+    public boolean updatePassword(int userId, String newHashedPassword) {
+        String sql = "UPDATE account SET password = ? WHERE user_id = ?";
+        try (Connection connection = JDBCUtil.getConnection();
+                PreparedStatement ps = connection.prepareStatement(sql)) {
+
+            ps.setString(1, newHashedPassword);
+            ps.setInt(2, userId);
+
+            return ps.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public static void main(String[] args) {
+        Dao dao = new Dao();
+        System.out.println(dao.getOrdersByUserId(1));
+    }
 }

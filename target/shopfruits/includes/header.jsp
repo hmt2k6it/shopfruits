@@ -2,7 +2,7 @@
   <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
     <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
       <fmt:setLocale value="vi_VN" />
-      <%@ page isELIgnored="false" %>
+      <c%@ page isELIgnored="false" %>
         <!-- Top Header Start -->
         <header class="top-header top-header-bg">
           <div class="container">
@@ -11,17 +11,17 @@
                 <div class="top-header-social">
                   <ul>
                     <li>
-                      <a href="#" target="_blank">
+                      <a href="https://github.com/hmt2k6it/shopfruits" target="_blank">
                         <i class="bx bxl-facebook"></i>
                       </a>
                     </li>
                     <li>
-                      <a href="#" target="_blank">
+                      <a href="https://github.com/hmt2k6it/shopfruits" target="_blank">
                         <i class="bx bxl-twitter"></i>
                       </a>
                     </li>
                     <li>
-                      <a href="#" target="_blank">
+                      <a href="https://github.com/hmt2k6it/shopfruits" target="_blank">
                         <i class="bx bxl-instagram"></i>
                       </a>
                     </li>
@@ -36,7 +36,7 @@
                       <c:choose>
                         <c:when test="${not empty sessionScope.account}">
                           <li>
-                            <a href="${pageContext.request.contextPath}/myaccount">
+                            <a href="${pageContext.request.contextPath}/myAccount">
                               Chào, ${sessionScope.account.userName}
                             </a>
                           </li>
@@ -89,24 +89,27 @@
                 <div class="collapse navbar-collapse mean-menu" id="navbarSupportedContent">
                   <ul class="navbar-nav m-auto">
                     <li class="nav-item">
-                      <a href="home" class="nav-link active"> Home </a>
+                      <a href="${pageContext.request.contextPath}/home" class="nav-link active"> Home </a>
                     </li>
                     <li class="nav-item">
-                      <a href="shop" class="nav-link"> Shop </a>
+                      <a href="${pageContext.request.contextPath}/shop" class="nav-link"> Shop </a>
+                    </li>
+                    <li class="nav-item">
+                      <a href="${pageContext.request.contextPath}/viewCart" class="nav-link"> Xem giỏ hàng </a>
                     </li>
                   </ul>
-
                   <div class="nav-right-side">
                     <ul class="nav-right-list">
-                      <li>
-                        <a href="#"><i class="bx bx-repost"></i></a>
-                      </li>
-                      <li>
-                        <a href="#"><i class="bx bx-heart"></i></a>
-                      </li>
                       <li class="cart-span">
-                        <a href="#"><i class="bx bx-cart"></i></a>
-                        <span>1</span>
+                        <a href="${pageContext.request.contextPath}/viewCart"><i class="bx bx-cart"></i></a>
+                        <c:choose>
+                          <c:when test="${cart.size != 0}">
+                            <span>${cart.size}</span>
+                          </c:when>
+                          <c:otherwise>
+                            <span>0</span>
+                          </c:otherwise>
+                        </c:choose>
                       </li>
                     </ul>
                   </div>

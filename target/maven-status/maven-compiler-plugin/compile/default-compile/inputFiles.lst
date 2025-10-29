@@ -2,9 +2,11 @@
 /home/hmt/WorkSpace/PPLVNCKH/Project/shopfruits/src/main/java/models/Account.java
 /home/hmt/WorkSpace/PPLVNCKH/Project/shopfruits/src/main/java/database/JDBCUtil.java
 /home/hmt/WorkSpace/PPLVNCKH/Project/shopfruits/src/main/java/controllers/ViewCartController.java
+/home/hmt/WorkSpace/PPLVNCKH/Project/shopfruits/src/main/java/controllers/RemoveCartController.java
 /home/hmt/WorkSpace/PPLVNCKH/Project/shopfruits/src/main/java/models/Item.java
 /home/hmt/WorkSpace/PPLVNCKH/Project/shopfruits/src/main/java/controllers/UserCURDServlet.java
 /home/hmt/WorkSpace/PPLVNCKH/Project/shopfruits/src/main/java/controllers/LoginController.java
+/home/hmt/WorkSpace/PPLVNCKH/Project/shopfruits/src/main/java/controllers/UpdateQuantityServlet.java
 /home/hmt/WorkSpace/PPLVNCKH/Project/shopfruits/src/main/java/controllers/HomeController.java
 /home/hmt/WorkSpace/PPLVNCKH/Project/shopfruits/src/main/java/controllers/RegisterController.java
 /home/hmt/WorkSpace/PPLVNCKH/Project/shopfruits/src/main/java/models/Cart.java
@@ -17,9 +19,7 @@
 /home/hmt/WorkSpace/PPLVNCKH/Project/shopfruits/src/main/java/models/Category.java
 /home/hmt/WorkSpace/PPLVNCKH/Project/shopfruits/src/main/java/controllers/LogoutController.java
 /home/hmt/WorkSpace/PPLVNCKH/Project/shopfruits/src/main/java/controllers/UpdateStatusServlet.java
-/home/hmt/WorkSpace/PPLVNCKH/Project/shopfruits/src/main/java/controllers/MyAccountController.java
 /home/hmt/WorkSpace/PPLVNCKH/Project/shopfruits/src/main/java/controllers/ShopController.java
-/home/hmt/WorkSpace/PPLVNCKH/Project/shopfruits/src/main/java/controllers/Product.java
 /home/hmt/WorkSpace/PPLVNCKH/Project/shopfruits/src/main/java/models/OrderDetail.java
 /home/hmt/WorkSpace/PPLVNCKH/Project/shopfruits/src/main/java/controllers/AdminDashboardServlet.java
 /home/hmt/WorkSpace/PPLVNCKH/Project/shopfruits/src/main/java/dao/Dao.java
