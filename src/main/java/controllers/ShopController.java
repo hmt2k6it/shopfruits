@@ -40,9 +40,9 @@ public class ShopController extends HttpServlet {
             }
         }
         // Xử lý logic
-        int pagination = (int) Math.ceil((double) products.size() / 6);
-        int startIndex = (Integer.parseInt(activePage) - 1) * 6;
-        int endIndex = Math.min(startIndex + 6, products.size());
+        int pagination = (int) Math.ceil((double) products.size() / 16);
+        int startIndex = (Integer.parseInt(activePage) - 1) * 16;
+        int endIndex = Math.min(startIndex + 16, products.size());
         List<Product> productPage = products.subList(startIndex, endIndex);
         // Đẩy dữ liệu lên jsp
         req.setAttribute("allCategories", allCategories);

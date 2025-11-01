@@ -36,7 +36,7 @@
                       <c:choose>
                         <c:when test="${not empty sessionScope.account}">
                           <li>
-                            <a href="${pageContext.request.contextPath}/myAccount">
+                            <a href="${pageContext.request.contextPath}/comesoon">
                               Chào, ${sessionScope.account.userName}
                             </a>
                           </li>
@@ -133,15 +133,16 @@
                   <div class="side-nav justify-content-center align-items-center">
                     <div class="side-nav-item">
                       <ul class="nav-right-list">
-                        <li>
-                          <a href="#"><i class="bx bx-repost"></i></a>
-                        </li>
-                        <li>
-                          <a href="#"><i class="bx bx-heart"></i></a>
-                        </li>
                         <li class="cart-span">
-                          <a href="#"><i class="bx bx-cart"></i></a>
-                          <span>1</span>
+                          <a href="${pageContext.request.contextPath}/viewCart"><i class="bx bx-cart"></i></a>
+                          <c:choose>
+                            <c:when test="${cart.size != 0}">
+                              <span>${cart.size}</span>
+                            </c:when>
+                            <c:otherwise>
+                              <span>0</span>
+                            </c:otherwise>
+                          </c:choose>
                         </li>
                       </ul>
                     </div>

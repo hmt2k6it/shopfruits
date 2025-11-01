@@ -497,29 +497,36 @@ public class Dao {
 
     public boolean deleteUser(int userId) {
 
-        // 3 câu lệnh SQL để xóa dữ liệu liên quan
+        // 4 câu lệnh SQL theo đúng thứ tự (thêm sqlOrderDetails)
         String sqlCart = "DELETE FROM cartItems WHERE user_id = ?";
-        String sqlOrders = "DELETE FROM orders WHERE user_id = ?";
-        String sqlAccount = "DELETE FROM account WHERE user_id = ?";
+
+        // BƯỚC MỚI: Xóa 'con' (orderdetails) trước
+        String sqlOrderDetails = "DELETE FROM orderdetails WHERE order_id IN (SELECT order_id FROM orders WHERE user_id = ?)";
+
+        String sqlOrders = "DELETE FROM orders WHERE user_id = ?"; // Xóa 'cha' (orders)
+        String sqlAccount = "DELETE FROM account WHERE user_id = ?"; // Xóa 'ông' (account)
 
         Connection connection = null;
         PreparedStatement psCart = null;
+        PreparedStatement psOrderDetails = null; // <-- Thêm PreparedStatement này
         PreparedStatement psOrders = null;
         PreparedStatement psAccount = null;
 
         try {
             connection = JDBCUtil.getConnection();
+            connection.setAutoCommit(false); // Bắt đầu Transaction
 
-            // 1. Bắt đầu Transaction
-            connection.setAutoCommit(false);
-
-            // 2. Xóa giỏ hàng của user
+            // 1. Xóa giỏ hàng của user
             psCart = connection.prepareStatement(sqlCart);
             psCart.setInt(1, userId);
             psCart.executeUpdate();
 
+            // 2. (MỚI) Xóa chi tiết đơn hàng của user
+            psOrderDetails = connection.prepareStatement(sqlOrderDetails);
+            psOrderDetails.setInt(1, userId);
+            psOrderDetails.executeUpdate();
+
             // 3. Xóa lịch sử đơn hàng của user
-            // (Cảnh báo: Việc này sẽ xóa lịch sử vĩnh viễn!)
             psOrders = connection.prepareStatement(sqlOrders);
             psOrders.setInt(1, userId);
             psOrders.executeUpdate();
@@ -527,7 +534,7 @@ public class Dao {
             // 4. Xóa tài khoản user
             psAccount = connection.prepareStatement(sqlAccount);
             psAccount.setInt(1, userId);
-            int result = psAccount.executeUpdate(); // Kiểm tra xem lệnh cuối có thành công không
+            int result = psAccount.executeUpdate();
 
             // 5. Nếu tất cả thành công, lưu (commit)
             connection.commit();
@@ -549,6 +556,8 @@ public class Dao {
             try {
                 if (psCart != null)
                     psCart.close();
+                if (psOrderDetails != null) // <-- Nhớ close()
+                    psOrderDetails.close();
                 if (psOrders != null)
                     psOrders.close();
                 if (psAccount != null)
@@ -752,6 +761,6 @@ public class Dao {
 
     public static void main(String[] args) {
         Dao dao = new Dao();
-        System.out.println(dao.getOrdersByUserId(1));
+        dao.deleteUser(3);
     }
 }

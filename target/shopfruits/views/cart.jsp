@@ -139,7 +139,9 @@
                                                     <div class="row align-items-center">
                                                         <div class="col-lg-7 col-sm-7 col-md-7">
                                                             <div class="continue-shopping-box">
-                                                                <a href="#" class="default-btn btn-bg-three">
+                                                                <a href="#${pageContext.request.contextPath}/shop"
+                                                                    class="
+                                                                    default-btn btn-bg-three">
                                                                     Tiếp tục mua
                                                                 </a>
                                                             </div>

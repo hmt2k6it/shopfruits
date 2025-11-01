@@ -85,7 +85,7 @@
                                   </h3>
                                 </div>
                                 <ul class="product-item-action">
-                                  <li>                                
+                                  <li>
                                     <a href="cart?productId=${product.productId}"><i class="bx bx-cart"></i></a>
                                   </li>
                                 </ul>
@@ -178,59 +178,6 @@
                                 </li>
                               </c:forEach>
                             </ul>
-                          </div>
-                        </div>
-
-                        <div class="product-side-bar-widget">
-                          <h3 class="title">High Rated Product</h3>
-                          <div class="product-popular-post">
-                            <article class="item">
-                              <a href="news-details.html" class="thumb">
-                                <span class="full-image cover bg1" role="img"></span>
-                              </a>
-                              <div class="info">
-                                <h4 class="title-text">
-                                  <a href="news-details.html"> Fresh Organic Meat </a>
-                                </h4>
-                                <p>$12.0 <del>$15.5</del></p>
-                              </div>
-                            </article>
-
-                            <article class="item">
-                              <a href="news-details.html" class="thumb">
-                                <span class="full-image cover bg2" role="img"></span>
-                              </a>
-                              <div class="info">
-                                <h4 class="title-text">
-                                  <a href="news-details.html"> Fresh Pineapple </a>
-                                </h4>
-                                <p>$3.50 <del>$4.0</del></p>
-                              </div>
-                            </article>
-
-                            <article class="item">
-                              <a href="news-details.html" class="thumb">
-                                <span class="full-image cover bg3" role="img"></span>
-                              </a>
-                              <div class="info">
-                                <h4 class="title-text">
-                                  <a href="news-details.html"> Fresh Banana </a>
-                                </h4>
-                                <p>$1.2 <del>$1.5</del></p>
-                              </div>
-                            </article>
-
-                            <article class="item">
-                              <a href="news-details.html" class="thumb">
-                                <span class="full-image cover bg4" role="img"></span>
-                              </a>
-                              <div class="info">
-                                <h4 class="title-text">
-                                  <a href="news-details.html"> Rear Organic Saffron </a>
-                                </h4>
-                                <p>$124.0</p>
-                              </div>
-                            </article>
                           </div>
                         </div>
                       </div>

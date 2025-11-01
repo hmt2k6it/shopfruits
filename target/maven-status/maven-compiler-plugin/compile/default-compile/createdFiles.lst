@@ -21,6 +21,7 @@ controllers/ProductCURDServlet.class
 models/Cart.class
 controllers/UserCURDServlet.class
 controllers/SearchController.class
+controllers/ComeSoonController.class
 controllers/HomeController.class
 controllers/UpdateStatusServlet.class
 controllers/RemoveCartController.class

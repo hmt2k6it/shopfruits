@@ -233,32 +233,7 @@
             </div>
             <!-- Trending Area End -->
 
-            <!-- Brand Area -->
-            <div class="brand-area pb-100">
-              <div class="container">
-                <div class="brand-slider owl-carousel owl-theme">
-                  <div class="brand-item">
-                    <img src="assets/images/brand-logo/brand-img1.png" alt="Images" />
-                  </div>
-                  <div class="brand-item">
-                    <img src="assets/images/brand-logo/brand-img2.png" alt="Images" />
-                  </div>
-                  <div class="brand-item">
-                    <img src="assets/images/brand-logo/brand-img3.png" alt="Images" />
-                  </div>
-                  <div class="brand-item">
-                    <img src="assets/images/brand-logo/brand-img4.png" alt="Images" />
-                  </div>
-                  <div class="brand-item">
-                    <img src="assets/images/brand-logo/brand-img5.png" alt="Images" />
-                  </div>
-                  <div class="brand-item">
-                    <img src="assets/images/brand-logo/brand-img2.png" alt="Images" />
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!-- Brand Area End -->
+
             <%@ include file="includes/footer.jsp" %>
               <!-- Jquery Min JS -->
               <script src="assets/js/jquery.min.js"></script>

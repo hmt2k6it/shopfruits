@@ -33,9 +33,9 @@ public class HomeController extends HttpServlet {
         // Lấy dữ liệu từ database
         List<Product> allProducts = dao.getAllProduct();
         // Xử lý logic pagination
-        int pagination = (int) Math.ceil((double) allProducts.size() / 8);
-        int startIndex = (Integer.parseInt(activePage) - 1) * 8;
-        int endIndex = Math.min(startIndex + 8, allProducts.size());
+        int pagination = (int) Math.ceil((double) allProducts.size() / 16);
+        int startIndex = (Integer.parseInt(activePage) - 1) * 16;
+        int endIndex = Math.min(startIndex + 16, allProducts.size());
         List<Product> productPage = allProducts.subList(startIndex, endIndex);
         // Gửi dữ liệu cho req
         req.setAttribute("activePage", activePage);

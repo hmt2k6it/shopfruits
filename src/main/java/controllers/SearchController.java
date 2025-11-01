@@ -23,7 +23,7 @@ public class SearchController extends HttpServlet {
         // Lấy dữ liệu từ database
         List<Product> productByName = dao.getProductByName(productName);
         // Gửi dữ liệu lên jsp
-        req.setAttribute("allProducts", productByName);
+        req.setAttribute("productPage", productByName);
         req.setAttribute("productName", productName);
         req.getRequestDispatcher("/views/shop.jsp").forward(req, resp);
     }
