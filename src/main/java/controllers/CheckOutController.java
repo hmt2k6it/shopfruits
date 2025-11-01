@@ -37,7 +37,7 @@ public class CheckOutController extends HttpServlet {
         boolean confirm = dao.confirmOrder(account, cart, shippingAddress, paymentMethod);
         if (confirm) {
             session.removeAttribute("cart");
-            resp.sendRedirect("compplete");
+            resp.sendRedirect("viewCart");
         } else {
             resp.sendRedirect("viewCart");
         }
